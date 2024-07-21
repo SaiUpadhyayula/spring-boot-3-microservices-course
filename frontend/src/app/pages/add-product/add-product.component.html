@@ -1,0 +1,69 @@
+<div class="container mx-auto p-4">
+  <h2 class="text-2xl font-bold mb-4">Add Product</h2>
+  @if (productCreated) {
+    <h4 class="text-green-500">Product Created Successfully</h4>
+  }
+  <form [formGroup]="addProductForm" (ngSubmit)="onSubmit()">
+    <div class="mb-4">
+      <label class="block text-gray-700" for="skuCode">SKU Code</label>
+      <input
+        type="text"
+        id="skuCode"
+        formControlName="skuCode"
+        class="border rounded w-full py-2 px-3 text-gray-700"
+      />
+      <div *ngIf="skuCode?.invalid && (skuCode?.dirty || skuCode?.touched)" class="text-red-500">
+        <div *ngIf="skuCode?.errors?.['required']">SKU Code is required.</div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700" for="name">Name</label>
+      <input
+        type="text"
+        id="name"
+        formControlName="name"
+        class="border rounded w-full py-2 px-3 text-gray-700"
+      />
+      <div *ngIf="name?.invalid && (name?.dirty || name?.touched)" class="text-red-500">
+        <div *ngIf="name?.errors?.['required']">Name is required.</div>
+        <div *ngIf="name?.errors?.['minlength']">Name must be at least 3 characters long.</div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700" for="description">Description</label>
+      <textarea
+        id="description"
+        formControlName="description"
+        class="border rounded w-full py-2 px-3 text-gray-700"
+      ></textarea>
+      <div *ngIf="description?.invalid && (description?.dirty || description?.touched)" class="text-red-500">
+        <div *ngIf="description?.errors?.['required']">Description is required.</div>
+        <div *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters long.</div>
+      </div>
+    </div>
+
+    <div class="mb-4">
+      <label class="block text-gray-700" for="price">Price</label>
+      <input
+        type="number"
+        id="price"
+        formControlName="price"
+        class="border rounded w-full py-2 px-3 text-gray-700"
+      />
+      <div *ngIf="price?.invalid && (price?.dirty || price?.touched)" class="text-red-500">
+        <div *ngIf="price?.errors?.['required']">Price is required.</div>
+        <div *ngIf="price?.errors?.['min']">Price must be greater than 0.</div>
+      </div>
+    </div>
+
+    <button
+      type="submit"
+      class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600"
+      [disabled]="addProductForm.invalid"
+    >
+      Add Product
+    </button>
+  </form>
+</div>

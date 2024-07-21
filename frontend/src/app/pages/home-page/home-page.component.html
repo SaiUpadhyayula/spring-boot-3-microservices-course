@@ -1,0 +1,46 @@
+<main>
+  <div class="p-4">
+    <div class="flex justify-between items-center mb-4">
+      <h1 class="text-2xl font-bold mb-4">Products ({{ products.length }})</h1>
+      @if (isAuthenticated) {
+        <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 ml-4"
+                (click)="goToCreateProductPage()">
+          Create Product
+        </button>
+      }
+    </div>
+    @if (products.length > 0) {
+      @if (orderSuccess) {
+        <h4 class="text-green-500 font-bold">Order Placed Successfully</h4>
+      } @else if (orderFailed) {
+        <h4 class="text-red-500 font-bold">Order Failed, please try again later</h4>
+        @if(quantityIsNull) {
+          <h4 class="text-red-500 font-bold">Quantity cannot be null</h4>
+        }
+      }
+      <ul class="list-disc list-inside">
+        @for (product of products; track product.id) {
+          <li class="mb-2 p-4 bg-gray-100 rounded-lg shadow-sm flex justify-between items-center">
+            <div>
+              <span class="font-semibold">{{ product.name }}</span> -
+              <span class="text-gray-600">
+                Price: {{ product.price }}
+              </span>
+              <br/>
+              <span >
+                Quantity: <input type="number" #quantityInput/>
+              </span>
+              <br/>
+            </div>
+            <button class="bg-green-500 text-white px-4 py-2 rounded-lg hover:bg-green-600 ml-4"
+                    (click)="orderProduct(product, quantityInput.value)">
+              Order Now
+            </button>
+          </li>
+        }
+      </ul>
+    } @else {
+      <p class="text-red-500 font-semibold">No products found!</p>
+    }
+  </div>
+</main>
