@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: keycloak-mysql
+  template:
+    metadata:
+      labels:
+        app: keycloak-mysql
+    spec:
+      containers:
+        - name: keycloak-mysql
+          image: mysql:8
+          ports:
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: "root"
+            - name: MYSQL_DATABASE
+              value: "keycloak"
+            - name: MYSQL_USER
+              value: "keycloak"
+            - name: MYSQL_PASSWORD
+              value: "password"
+          volumeMounts:
+            - name: keycloak-mysql-data
+              mountPath: /var/lib/mysql
+      volumes:
+        - name: keycloak-mysql-data
+          persistentVolumeClaim:
+            claimName: keycloak-mysql-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-mysql
+spec:
+  selector:
+    app: keycloak-mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: keycloak-mysql-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

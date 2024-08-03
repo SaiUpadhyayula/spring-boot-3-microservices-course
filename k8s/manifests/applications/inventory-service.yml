@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory-service
+  template:
+    metadata:
+      labels:
+        app: inventory-service
+    spec:
+      containers:
+        - name: inventory-service
+          image: saiupadhyayula007/new-inventory-service:latest
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://mysql.default.svc.cluster.local:3306/inventory_service
+            - name: LOKI_URL
+              value: http://loki.default.svc.cluster.local:3100/loki/api/v1/push
+            - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+              value: http://tempo.default.svc.cluster.local:9411
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: inventory-service
+spec:
+  selector:
+    app: inventory-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082

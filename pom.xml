@@ -33,6 +33,17 @@
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
+          <image>
+            <name>saiupadhyayula007/new-${project.artifactId}</name>
+            <builder>dashaun/builder:tiny</builder>
+            <publish>true</publish>
+          </image>
+          <docker>
+            <publishRegistry>
+              <username>saiupadhyayula007</username>
+              <password>${dockerPassword}</password>
+            </publishRegistry>
+          </docker>
           <excludes>
             <exclude>
               <groupId>org.projectlombok</groupId>

@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.services.inventory.appName }}-deployment
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.services.inventory.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.services.inventory.appName }}
+        app.kubernetes.io/name: {{ .Values.services.inventory.appName }}
+        app.kubernetes.io/part-of: {{ .Values.services.inventory.appName }}
+        app.kubernetes.io/version: {{ .Values.services.tag  }}
+        keptn.sh/post-deployment-tasks: stdout-notification
+    spec:
+      containers:
+        - name: {{ .Values.services.inventory.appName }}
+          image: "{{ .Values.services.registry }}/{{ .Values.services.inventory.image }}:{{ .Values.services.tag }}"
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:mysql://{{ .Release.Name }}-mysql.{{ .Release.Namespace }}.svc.cluster.local:3306/inventory_service
+            - name: LOKI_URL
+              value: http://{{ .Release.Name }}-loki-gateway.{{ .Release.Namespace }}.svc.cluster.local:80/loki/api/v1/push
+            - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+              value: http://{{ .Release.Name }}-tempo-distributor.{{ .Release.Namespace }}.svc.cluster.local:9411
+          ports:
+            - containerPort: 8082
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.inventory.appName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: {{ .Values.services.inventory.appName }}
+  ports:
+    - port: 8082
+      targetPort: 8082

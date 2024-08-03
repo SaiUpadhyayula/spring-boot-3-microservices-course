@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ .Release.Name }}-frontend-ingress
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: {{ .Release.Name }}-frontend-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: {{ .Values.ingress.host }}
+      http:
+        paths:
+          - path: /api/(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.services.apigateway.appName }}
+                port:
+                  number: 9000
+          - path: /api/order(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.services.apigateway.appName }}
+                port:
+                  number: 9000
+          - path: /actuator/(/|$)(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: {{ .Values.services.apigateway.appName }}
+                port:
+                  number: 9000

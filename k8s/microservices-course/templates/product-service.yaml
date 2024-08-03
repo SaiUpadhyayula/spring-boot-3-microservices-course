@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.services.product.appName }}-deployment
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.services.product.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.services.product.appName }}
+        app.kubernetes.io/name: {{ .Values.services.product.appName }}
+        app.kubernetes.io/part-of: {{ .Values.services.product.appName }}
+        app.kubernetes.io/version: {{ .Values.services.tag  }}
+        keptn.sh/post-deployment-tasks: stdout-notification
+    spec:
+      containers:
+        - name: {{ .Values.services.product.appName }}
+          image: "{{ .Values.services.registry }}/{{ .Values.services.product.image }}:{{ .Values.services.tag }}"
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_DATA_MONGODB_URI
+              value: mongodb://root:password@sb3-mongodb.default.svc.cluster.local:27017/product-service?authSource=admin
+            - name: LOKI_URL
+              value: http://{{ .Release.Name }}-loki-gateway.{{ .Release.Namespace }}.svc.cluster.local:80/loki/api/v1/push
+            - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+              value: http://{{ .Release.Name }}-tempo-distributor.{{ .Release.Namespace }}.svc.cluster.local:9411
+          ports:
+            - containerPort: {{ .Values.services.containerPort }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.product.appName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: {{ .Values.services.product.appName }}
+  ports:
+    - port: 8080
+      targetPort: 8080

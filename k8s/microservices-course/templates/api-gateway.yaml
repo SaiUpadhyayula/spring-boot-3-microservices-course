@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.services.apigateway.appName }}-deployment
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ .Values.services.apigateway.appName }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.services.apigateway.appName }}
+        app.kubernetes.io/name: {{ .Values.services.apigateway.appName }}
+        app.kubernetes.io/part-of: {{ .Values.services.apigateway.appName }}
+        app.kubernetes.io/version: {{ .Values.services.tag  }}
+        keptn.sh/post-deployment-tasks: stdout-notification
+    spec:
+      containers:
+        - name: {{ .Values.services.apigateway.appName }}
+          image: "{{ .Values.services.registry }}/{{ .Values.services.apigateway.image }}:{{ .Values.services.tag }}"
+          imagePullPolicy: Always
+          env:
+            - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI
+              value: {{ .Release.Name }}-keycloak.{{ .Release.Namespace }}.svc.cluster.local/realms/spring-microservices-security-realm
+            - name: LOKI_URL
+              value: http://{{ .Release.Name }}-loki-gateway.{{ .Release.Namespace }}.svc.cluster.local:80/loki/api/v1/push
+            - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+              value: http://{{ .Release.Name }}-tempo-distributor.{{ .Release.Namespace }}.svc.cluster.local:9411
+            - name: PRODUCT_SERVICE_URL
+              value: http://{{ .Release.Name }}-{{ .Values.services.product.appName }}.{{ .Release.Namespace }}.svc.cluster.local
+            - name: ORDER_SERVICE_URL
+              value: http://{{ .Release.Name }}-{{ .Values.services.order.appName }}.{{ .Release.Namespace }}.svc.cluster.local
+            - name: INVENTORY_SERVICE_URL
+              value: http://{{ .Release.Name }}-{{ .Values.services.inventory.appName }}.{{ .Release.Namespace }}.svc.cluster.local
+            - name: LOGGING_LEVEL_ROOT
+              value: TRACE
+          ports:
+            - containerPort: {{ .Values.services.containerPort }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.services.apigateway.appName }}
+  namespace: {{ .Release.Namespace }}
+spec:
+  selector:
+    app: {{ .Values.services.apigateway.appName }}
+  ports:
+    - port: 9000
+      targetPort: 9000
