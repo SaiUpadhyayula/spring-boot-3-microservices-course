@@ -19,11 +19,20 @@ spec:
             - containerPort: 3000
           env:
             - name: GF_AUTH_ANONYMOUS_ENABLED
-              value: "true"
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_AUTH_ANONYMOUS_ENABLED
+                  name: grafana-configmap
             - name: GF_AUTH_ANONYMOUS_ORG_ROLE
-              value: "Admin"
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_AUTH_ANONYMOUS_ORG_ROLE
+                  name: grafana-configmap
             - name: GF_AUTH_DISABLE_LOGIN_FORM
-              value: "true"
+              valueFrom:
+                configMapKeyRef:
+                  key: GF_AUTH_DISABLE_LOGIN_FORM
+                  name: grafana-configmap
           volumeMounts:
             - name: grafana-config
               mountPath: /etc/grafana/provisioning/datasources
@@ -49,6 +58,9 @@ kind: ConfigMap
 metadata:
   name: grafana-configmap
 data:
+    GF_AUTH_ANONYMOUS_ENABLED: "true"
+    GF_AUTH_ANONYMOUS_ORG_ROLE: "Admin"
+    GF_AUTH_DISABLE_LOGIN_FORM: "true"
     datasource.yml: |
       apiVersion: 1
 

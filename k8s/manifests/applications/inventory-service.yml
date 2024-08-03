@@ -17,11 +17,20 @@ spec:
           image: saiupadhyayula007/new-inventory-service:latest
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://mysql.default.svc.cluster.local:3306/inventory_service
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_DATASOURCE_URL
+                  name: inventory-service-config
             - name: LOKI_URL
-              value: http://loki.default.svc.cluster.local:3100/loki/api/v1/push
+              valueFrom:
+                configMapKeyRef:
+                  key: LOKI_URL
+                  name: common-config
             - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
-              value: http://tempo.default.svc.cluster.local:9411
+              valueFrom:
+                configMapKeyRef:
+                  key: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+                  name: common-config
 ---
 apiVersion: v1
 kind: Service
@@ -34,3 +43,10 @@ spec:
     - protocol: TCP
       port: 8082
       targetPort: 8082
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: inventory-service-config
+data:
+  SPRING_DATASOURCE_URL: "jdbc:mysql://mysql.default.svc.cluster.local:3306/inventory_service"

@@ -22,7 +22,7 @@ spec:
             - name: SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS
               value: 'broker:29092'
             - name: SCHEMA_REGISTRY_LISTENERS
-              value: http://schema-registry:8081
+              value: http://0.0.0.0:8081
           ports:
             - containerPort: 8081
 ---

@@ -17,11 +17,20 @@ spec:
           image: saiupadhyayula007/new-product-service:latest
           env:
             - name: SPRING_DATA_MONGODB_URI
-              value: mongodb://root:password@mongodb.default.svc.cluster.local:27017/product-service?authSource=admin
+              valueFrom:
+                configMapKeyRef:
+                  key: SPRING_DATA_MONGODB_URI
+                  name: product-service-config
             - name: LOKI_URL
-              value: http://loki:3100/loki/api/v1/push
+              valueFrom:
+                configMapKeyRef:
+                  key: LOKI_URL
+                  name: common-config
             - name: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
-              value: http://tempo:9411
+              valueFrom:
+                configMapKeyRef:
+                  key: MANAGEMENT_ZIPKIN_TRACING_ENDPOINT
+                  name: common-config
 ---
 apiVersion: v1
 kind: Service
@@ -34,3 +43,10 @@ spec:
     - protocol: TCP
       port: 8080
       targetPort: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: product-service-config
+data:
+  SPRING_DATA_MONGODB_URI: "mongodb://root:password@mongodb.default.svc.cluster.local:27017/product-service?authSource=admin"
