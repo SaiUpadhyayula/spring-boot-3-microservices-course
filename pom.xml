@@ -26,7 +26,6 @@
     <spring-cloud.version>2023.0.1</spring-cloud.version>
     <dockerPassword>${dockerPassword}</dockerPassword>
   </properties>
-
   <build>
     <plugins>
       <plugin>

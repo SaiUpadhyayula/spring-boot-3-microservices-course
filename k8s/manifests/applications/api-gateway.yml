@@ -35,9 +35,9 @@ spec:
                   name: common-config
             - name: PRODUCT_SERVICE_URL
               valueFrom:
-                  configMapKeyRef:
-                    key: PRODUCT_SERVICE_URL
-                    name: common-config
+                configMapKeyRef:
+                  key: PRODUCT_SERVICE_URL
+                  name: common-config
             - name: ORDER_SERVICE_URL
               valueFrom:
                 configMapKeyRef:
@@ -66,4 +66,4 @@ kind: ConfigMap
 metadata:
   name: api-gateway-config
 data:
-    SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: "http://keycloak.default.svc.cluster.local:8080/realms/spring-microservices-security-realm"
+  SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI: "http://keycloak.default.svc.cluster.local:8080/realms/spring-microservices-security-realm"
