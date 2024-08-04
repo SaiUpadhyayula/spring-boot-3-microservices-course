@@ -1,7 +1,7 @@
 # Spring Boot Microservices
 This repository contains the latest source code of the spring-boot-microservices tutorial
 
-You can watch the tutorial on Youtube here - https://www.youtube.com/watch?v=mPPhcU7oWDU&t=20634s
+You can watch the tutorial on Youtube here - [https://www.youtube.com/watch?v=mPPhcU7oWDU&t=20634s](https://www.youtube.com/playlist?list=PLSVW22jAG8pDeU80nDzbUgr8qqzEMppi8)
 
 ## Application Architecture
 
