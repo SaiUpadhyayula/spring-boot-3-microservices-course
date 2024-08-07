@@ -14,19 +14,19 @@ import java.net.URI;
 
 import static org.springframework.cloud.gateway.server.mvc.filter.FilterFunctions.setPath;
 import static org.springframework.cloud.gateway.server.mvc.handler.GatewayRouterFunctions.route;
+import static org.springframework.cloud.gateway.server.mvc.handler.HandlerFunctions.http;
 
-@Configuration
+@Configuration(proxyBeanMethods = false)
 public class Routes {
-
     @Bean
     public RouterFunction<ServerResponse> productServiceRoute() {
-        return GatewayRouterFunctions.route("product_service")
-                .route(RequestPredicates.path("/api/product"), HandlerFunctions.http("http://localhost:8080"))
+        return route("product_service")
+                .route(RequestPredicates.path("/api/product"), http("http://localhost:8080"))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("productServiceCircuitBreaker",
-                        URI.create("forward:/fallbackRoute")))
+                       URI.create("forward:/fallbackRoute")))
                 .build();
     }
-
+//
     @Bean
     public RouterFunction<ServerResponse> productServiceSwaggerRoute() {
         return GatewayRouterFunctions.route("product_service_swagger")
@@ -51,7 +51,7 @@ public class Routes {
         return GatewayRouterFunctions.route("order_service_swagger")
                 .route(RequestPredicates.path("/aggregate/order-service/v3/api-docs"), HandlerFunctions.http("http://localhost:8081"))
                 .filter(CircuitBreakerFilterFunctions.circuitBreaker("orderServiceSwaggerCircuitBreaker",
-                        URI.create("forward:/fallbackRoute")))
+                       URI.create("forward:/fallbackRoute")))
                 .filter(setPath("/api-docs"))
                 .build();
     }

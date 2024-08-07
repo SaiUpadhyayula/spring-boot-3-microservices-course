@@ -18,8 +18,8 @@ import java.util.UUID;
 @Slf4j
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final InventoryClient inventoryClient;
-    private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
+   private final InventoryClient inventoryClient;
+   private final KafkaTemplate<String, OrderPlacedEvent> kafkaTemplate;
 
     public void placeOrder(OrderRequest orderRequest) {
 
@@ -33,16 +33,17 @@ public class OrderService {
             orderRepository.save(order);
 
             // Send the message to Kafka Topic
-            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent();
-            orderPlacedEvent.setOrderNumber(order.getOrderNumber());
-            orderPlacedEvent.setEmail(orderRequest.userDetails().email());
-            orderPlacedEvent.setFirstName(orderRequest.userDetails().firstName());
-            orderPlacedEvent.setLastName(orderRequest.userDetails().lastName());
-            log.info("Start - Sending OrderPlacedEvent {} to Kafka topic order-placed", orderPlacedEvent);
-            kafkaTemplate.send("order-placed", orderPlacedEvent);
+            OrderPlacedEvent orderPlacedEvent = new OrderPlacedEvent(order.getOrderNumber(), orderRequest.userDetails().email());
+       //     orderPlacedEvent.setOrderNumber(order.getOrderNumber());
+        //     orderPlacedEvent.setEmail(orderRequest.userDetails().email());
+//            orderPlacedEvent.setFirstName(orderRequest.userDetails().firstName());
+//            orderPlacedEvent.setLastName(orderRequest.userDetails().lastName());
+           log.info("Start - Sending OrderPlacedEvent {} to Kafka topic order-placed", orderPlacedEvent);
+             kafkaTemplate.send("order-placed", orderPlacedEvent);
             log.info("End - Sending OrderPlacedEvent {} to Kafka topic order-placed", orderPlacedEvent);
         } else {
-            throw new RuntimeException("Product with SkuCode " + orderRequest.skuCode() + " is not in stock");
+            throw new RuntimeException("Product is out of stock" + orderRequest.skuCode());
         }
     }
+
 }
