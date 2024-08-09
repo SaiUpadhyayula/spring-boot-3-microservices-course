@@ -4,8 +4,7 @@ This repository contains the latest source code of the spring-boot-microservices
 You can watch the tutorial on Youtube [here](https://youtu.be/yn_stY3HCr8?si=EjrBEUl0P-bzSWRG)
 
 ## Application Architecture
-
-![img.png](img.png)
+![image](https://github.com/user-attachments/assets/d4ef38bd-8ae5-4cc7-9ac5-7a8e5ec3c969)
 
 ## How to run the frontend application
 
