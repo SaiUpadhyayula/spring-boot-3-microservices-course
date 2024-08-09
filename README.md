@@ -1,7 +1,7 @@
 # Spring Boot Microservices
 This repository contains the latest source code of the spring-boot-microservices tutorial
 
-You can watch the tutorial on Youtube here - [https://www.youtube.com/watch?v=mPPhcU7oWDU&t=20634s](https://www.youtube.com/playlist?list=PLSVW22jAG8pDeU80nDzbUgr8qqzEMppi8)
+You can watch the tutorial on Youtube [here](https://youtu.be/yn_stY3HCr8?si=EjrBEUl0P-bzSWRG)
 
 ## Application Architecture
 
@@ -86,3 +86,26 @@ To access the Grafana dashboards, you need to port-forward the grafana service t
 ```shell
 kubectl port-forward svc/grafana 3000:3000
 ```
+
+
+## Services Overview
+
+- Product Service
+- Order Service
+- Inventory Service
+- Notification Service
+- API Gateway using Spring Cloud Gateway MVC
+
+## Tech Stack
+
+The technologies used in this project are:
+
+- Spring Boot
+- Mongo DB
+- MySQL
+- Kafka
+- Keycloak
+- Test Containers with Wiremock
+- Grafana Stack (Prometheus, Grafana, Loki and Tempo)
+- API Gateway using Spring Cloud Gateway MVC
+- Kubernetes
