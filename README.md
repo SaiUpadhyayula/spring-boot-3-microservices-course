@@ -95,12 +95,14 @@ kubectl port-forward svc/grafana 3000:3000
 - Inventory Service
 - Notification Service
 - API Gateway using Spring Cloud Gateway MVC
+- Shop Frontend using Angular 18
 
 ## Tech Stack
 
 The technologies used in this project are:
 
 - Spring Boot
+- Angular
 - Mongo DB
 - MySQL
 - Kafka
